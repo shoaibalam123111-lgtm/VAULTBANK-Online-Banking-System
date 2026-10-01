@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VAULTBANK - Online Banking System</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<!-- ================= LOGIN ================= -->
+
+<div id="loginPage">
+    <div class="login-container">
+        <div class="login-box">
+
+            <div class="bank-logo">VB</div>
+
+            <h1>VAULTBANK</h1>
+            <p>Secure Online Banking System</p>
+
+            <div id="loginMessage" class="message"></div>
+
+            <label>Email Address</label>
+            <input type="email" id="email" placeholder="Enter your email">
+
+            <label>Password</label>
+            <input type="password" id="password" placeholder="Enter your password">
+
+            <label>Login As</label>
+            <select id="role">
+                <option value="customer">Customer</option>
+                <option value="admin">Admin</option>
+            </select>
+
+            <button class="login-btn" onclick="login()">Login</button>
+
+            <div class="demo-login">
+                <strong>Demo Accounts</strong>
+                <p>Customer: customer@gmail.com / customer123</p>
+                <p>Admin: admin@gmail.com / admin123</p>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<!-- ================= CUSTOMER DASHBOARD ================= -->
+
+<div id="customerDashboard" class="dashboard">
+
+    <aside class="sidebar">
+
+        <div class="brand">
+            <div class="small-logo">VB</div>
+            <span>VAULTBANK</span>
+        </div>
+
+        <button onclick="showCustomerSection('dashboard')">
+            🏠 Dashboard
+        </button>
+
+        <button onclick="showCustomerSection('account')">
+            💳 Account
+        </button>
+
+        <button onclick="showCustomerSection('deposit')">
+            💰 Deposit
+        </button>
+
+        <button onclick="showCustomerSection('withdraw')">
+            💸 Withdraw
+        </button>
+
+        <button onclick="showCustomerSection('transfer')">
+            🔄 Send Money
+        </button>
+
+        <button onclick="showCustomerSection('transactions')">
+            📋 Transactions
+        </button>
+
+        <button onclick="showCustomerSection('services')">
+            🏦 Banking Services
+        </button>
+
+        <button onclick="showCustomerSection('profile')">
+            👤 Profile
+        </button>
+
+        <button class="logout-btn" onclick="logout()">
+            🚪 Logout
+        </button>
+
+    </aside>
+
+
+    <main class="main-content">
+
+        <header class="topbar">
+            <div>
+                <h1 id="customerPageTitle">Customer Dashboard</h1>
+                <p>Welcome to VAULTBANK</p>
+            </div>
+
+            <div class="user-badge">
+                👤 <span id="customerName">Customer</span>
+            </div>
+        </header>
+
+
+        <!-- CUSTOMER DASHBOARD HOME -->
+
+        <section id="customerHome">
+
+            <div class="cards">
+
+                <div class="card">
+                    <div class="card-icon">💰</div>
+                    <h3>Available Balance</h3>
+                    <h2 id="customerBalance">₹50,000.00</h2>
+                </div>
+
+                <div class="card">
+                    <div class="card-icon">🔐</div>
+                    <h3>Account Status</h3>
+                    <h2 class="green">Active</h2>
+                </div>
+
+                <div class="card">
+                    <div class="card-icon">🏦</div>
+                    <h3>Bank</h3>
+                    <h2>VAULTBANK</h2>
+                </div>
+
+                <div class="card">
+                    <div class="card-icon">📊</div>
+                    <h3>Transactions</h3>
+                    <h2 id="customerTransactionCount">0</h2>
+                </div>
+
+            </div>
+
+
+            <div class="content-box">
+
+                <div class="section-header">
+                    <h2>Recent Transactions</h2>
+                    <button class="small-btn"
+                            onclick="showCustomerSection('transactions')">
+                        View All
+                    </button>
+                </div>
+
+                <div id="customerRecentTransactions">
+                    <p class="empty">No transactions available.</p>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ACCOUNT -->
+
+        <section id="accountSection"
+                 class="content-box hidden">
+
+            <h2>Account Overview</h2>
+
+            <div class="account-details">
+
+                <div>
+                    <span>Bank Name</span>
+                    <strong>VAULTBANK</strong>
+                </div>
+
+                <div>
+                    <span>Account Holder</span>
+                    <strong id="accountHolder">Customer</strong>
+                </div>
+
+                <div>
+                    <span>Email</span>
+                    <strong id="accountEmail">
+                        customer@gmail.com
+                    </strong>
+                </div>
+
+                <div>
+                    <span>Account Status</span>
+                    <strong class="green">Active</strong>
+                </div>
+
+                <div>
+                    <span>Available Balance</span>
+                    <strong id="accountBalance">
+                        ₹50,000.00
+                    </strong>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- DEPOSIT -->
+
+        <section id="depositSection"
+                 class="content-box form-box hidden">
+
+            <h2>Deposit Money</h2>
+            <p>Add money to your VAULTBANK account.</p>
+
+            <label>Amount</label>
+
+            <input type="number"
+                   id="depositAmount"
+                   placeholder="Enter amount">
+
+            <button class="success-btn"
+                    onclick="depositMoney()">
+                Deposit Money
+            </button>
+
+        </section>
+
+
+        <!-- WITHDRAW -->
+
+        <section id="withdrawSection"
+                 class="content-box form-box hidden">
+
+            <h2>Withdraw Money</h2>
+            <p>Withdraw money from your VAULTBANK account.</p>
+
+            <label>Amount</label>
+
+            <input type="number"
+                   id="withdrawAmount"
+                   placeholder="Enter amount">
+
+            <button class="danger-btn"
+                    onclick="withdrawMoney()">
+                Withdraw Money
+            </button>
+
+        </section>
+
+
+        <!-- TRANSFER -->
+
+        <section id="transferSection"
+                 class="content-box form-box hidden">
+
+            <h2>Send Money</h2>
+            <p>Transfer money securely to another customer.</p>
+
+            <label>Receiver Email</label>
+
+            <input type="email"
+                   id="receiverEmail"
+                   placeholder="Enter receiver email">
+
+            <label>Amount</label>
+
+            <input type="number"
+                   id="transferAmount"
+                   placeholder="Enter amount">
+
+            <button class="primary-btn"
+                    onclick="sendMoney()">
+                Send Money
+            </button>
+
+        </section>
+
+
+        <!-- TRANSACTIONS -->
+
+        <section id="transactionsSection"
+                 class="content-box hidden">
+
+            <div class="section-header">
+                <h2>Transaction History</h2>
+            </div>
+
+            <input type="text"
+                   id="transactionSearch"
+                   placeholder="Search transactions..."
+                   oninput="displayTransactions()">
+
+            <div id="transactionHistory">
+                <p class="empty">No transactions available.</p>
+            </div>
+
+        </section>
+
+
+        <!-- SERVICES -->
+
+        <section id="servicesSection"
+                 class="content-box hidden">
+
+            <h2>Banking Services</h2>
+
+            <div class="service-grid">
+
+                <div class="service-card">
+                    <div class="service-icon">🏦</div>
+                    <h3>Personal Loan</h3>
+                    <p>
+                        Flexible personal loan services
+                        for your financial needs.
+                    </p>
+                    <button onclick="applyService('Personal Loan')">
+                        Apply
+                    </button>
+                </div>
+
+                <div class="service-card">
+                    <div class="service-icon">🏠</div>
+                    <h3>Home Loan</h3>
+                    <p>
+                        Finance your dream home with
+                        VAULTBANK.
+                    </p>
+                    <button onclick="applyService('Home Loan')">
+                        Apply
+                    </button>
+                </div>
+
+                <div class="service-card">
+                    <div class="service-icon">📈</div>
+                    <h3>Investment</h3>
+                    <p>
+                        Explore investment options for
+                        your financial future.
+                    </p>
+                    <button onclick="applyService('Investment')">
+                        Explore
+                    </button>
+                </div>
+
+                <div class="service-card">
+                    <div class="service-icon">💳</div>
+                    <h3>Credit Card</h3>
+                    <p>
+                        Secure and convenient credit
+                        card services.
+                    </p>
+                    <button onclick="applyService('Credit Card')">
+                        Apply
+                    </button>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- PROFILE -->
+
+        <section id="profileSection"
+                 class="content-box form-box hidden">
+
+            <h2>Profile Management</h2>
+
+            <label>Name</label>
+
+            <input type="text"
+                   id="profileName"
+                   placeholder="Enter your name">
+
+            <label>Email</label>
+
+            <input type="email"
+                   id="profileEmail"
+                   placeholder="Enter your email">
+
+            <button class="primary-btn"
+                    onclick="updateProfile()">
+                Update Profile
+            </button>
+
+
+            <hr>
+
+
+            <h2>Change Password</h2>
+
+            <label>Old Password</label>
+
+            <input type="password"
+                   id="oldPassword"
+                   placeholder="Enter old password">
+
+            <label>New Password</label>
+
+            <input type="password"
+                   id="newPassword"
+                   placeholder="Enter new password">
+
+            <button class="warning-btn"
+                    onclick="changePassword()">
+                Change Password
+            </button>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+<!-- ================= ADMIN DASHBOARD ================= -->
+
+<div id="adminDashboard" class="dashboard">
+
+    <aside class="sidebar">
+
+        <div class="brand">
+            <div class="small-logo">VB</div>
+            <span>VAULTBANK</span>
+        </div>
+
+        <button onclick="showAdminSection('dashboard')">
+            🏠 Dashboard
+        </button>
+
+        <button onclick="showAdminSection('users')">
+            👥 User Management
+        </button>
+
+        <button onclick="showAdminSection('transactions')">
+            💳 Transactions
+        </button>
+
+        <button onclick="showAdminSection('settings')">
+            ⚙️ System Settings
+        </button>
+
+        <button onclick="showAdminSection('metrics')">
+            📊 Operational Metrics
+        </button>
+
+        <button class="logout-btn" onclick="logout()">
+            🚪 Logout
+        </button>
+
+    </aside>
+
+
+    <main class="main-content">
+
+        <header class="topbar">
+
+            <div>
+                <h1>Admin Dashboard</h1>
+                <p>VAULTBANK Administration Panel</p>
+            </div>
+
+            <div class="user-badge">
+                👨‍💼 Administrator
+            </div>
+
+        </header>
+
+
+        <!-- ADMIN HOME -->
+
+        <section id="adminHome">
+
+            <div class="cards">
+
+                <div class="card">
+                    <div class="card-icon">👥</div>
+                    <h3>Total Users</h3>
+                    <h2 id="totalUsers">2</h2>
+                </div>
+
+                <div class="card">
+                    <div class="card-icon">💳</div>
+                    <h3>Total Transactions</h3>
+                    <h2 id="totalTransactions">0</h2>
+                </div>
+
+                <div class="card">
+                    <div class="card-icon">💰</div>
+                    <h3>Customer Balance</h3>
+                    <h2 id="totalBalance">₹50,000.00</h2>
+                </div>
+
+                <div class="card">
+                    <div class="card-icon">🟢</div>
+                    <h3>System Status</h3>
+                    <h2 class="green">Online</h2>
+                </div>
+
+            </div>
+
+
+            <div class="content-box">
+
+                <h2>VAULTBANK System Overview</h2>
+
+                <div class="status-list">
+
+                    <p>🟢 Banking System
+                        <strong>Online</strong>
+                    </p>
+
+                    <p>🔒 Security
+                        <strong>Enabled</strong>
+                    </p>
+
+                    <p>💳 Transaction System
+                        <strong>Active</strong>
+                    </p>
+
+                    <p>👥 User Management
+                        <strong>Active</strong>
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- USER MANAGEMENT -->
+
+        <section id="usersSection"
+                 class="content-box hidden">
+
+            <h2>User Management</h2>
+
+            <div class="form-grid">
+
+                <input type="text"
+                       id="newUserName"
+                       placeholder="Full Name">
+
+                <input type="email"
+                       id="newUserEmail"
+                       placeholder="Email">
+
+                <input type="password"
+                       id="newUserPassword"
+                       placeholder="Password">
+
+                <select id="newUserRole">
+
+                    <option value="customer">
+                        Customer
+                    </option>
+
+                    <option value="admin">
+                        Admin
+                    </option>
+
+                </select>
+
+                <input type="number"
+                       id="newUserBalance"
+                       placeholder="Initial Balance">
+
+            </div>
+
+            <button class="success-btn"
+                    onclick="addUser()">
+                Create User
+            </button>
+
+
+            <hr>
+
+
+            <h3>Registered Users</h3>
+
+            <div class="table-container">
+
+                <table>
+
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Role</th>
+                            <th>Balance</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="userTableBody"></tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+
+        <!-- TRANSACTION MONITORING -->
+
+        <section id="adminTransactionsSection"
+                 class="content-box hidden">
+
+            <h2>Transaction Monitoring</h2>
+
+            <div id="adminTransactions">
+                <p class="empty">
+                    No transactions available.
+                </p>
+            </div>
+
+        </section>
+
+
+        <!-- SETTINGS -->
+
+        <section id="settingsSection"
+                 class="content-box hidden">
+
+            <h2>System Settings</h2>
+
+            <div class="settings-list">
+
+                <div>
+                    <span>Bank Name</span>
+                    <strong>VAULTBANK</strong>
+                </div>
+
+                <div>
+                    <span>System Status</span>
+                    <strong class="green">Online</strong>
+                </div>
+
+                <div>
+                    <span>Security</span>
+                    <strong>Enabled</strong>
+                </div>
+
+                <div>
+                    <span>Transactions</span>
+                    <strong>Enabled</strong>
+                </div>
+
+                <div>
+                    <span>User Management</span>
+                    <strong>Enabled</strong>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- METRICS -->
+
+        <section id="metricsSection"
+                 class="content-box hidden">
+
+            <h2>Operational Metrics</h2>
+
+            <div class="cards">
+
+                <div class="card">
+                    <h3>Registered Users</h3>
+                    <h2 id="metricUsers">2</h2>
+                </div>
+
+                <div class="card">
+                    <h3>Transactions</h3>
+                    <h2 id="metricTransactions">0</h2>
+                </div>
+
+                <div class="card">
+                    <h3>System Status</h3>
+                    <h2 class="green">Online</h2>
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+<script src="script.js"></script>
+
+</body>
+</html>

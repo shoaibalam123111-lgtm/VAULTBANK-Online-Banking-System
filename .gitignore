@@ -1,0 +1,12 @@
+# Java compiled files
+*.class
+
+# MySQL password/reset files
+mysql-init.txt
+
+# VS Code
+.vscode/
+
+# Operating system files
+.DS_Store
+Thumbs.db
