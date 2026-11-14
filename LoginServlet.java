@@ -1,8 +1,10 @@
+
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -15,54 +17,91 @@ public class LoginServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request,
-                           HttpServletResponse response)
+                          HttpServletResponse response)
             throws ServletException, IOException {
 
         String email = request.getParameter("email");
         String password = request.getParameter("password");
 
-        response.setContentType("text/html");
+        response.setContentType("text/html;charset=UTF-8");
 
-        PrintWriter out = response.getWriter();
+        if (email == null || password == null ||
+            email.isBlank() || password.isBlank()) {
 
-        String sql = "SELECT name, role FROM users WHERE email = ? AND password = ?";
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            response.getWriter().println("Email and password are required.");
+            return;
+        }
 
-        try {
+        String sql = "SELECT id, name, role, password FROM users WHERE email = ?";
 
+        try (
             Connection con = DBConnection.getConnection();
-
-            PreparedStatement ps = con.prepareStatement(sql);
+            PreparedStatement ps = con.prepareStatement(sql)
+        ) {
 
             ps.setString(1, email);
-            ps.setString(2, password);
 
-            ResultSet rs = ps.executeQuery();
+            try (ResultSet rs = ps.executeQuery()) {
 
-            if (rs.next()) {
+                if (rs.next()) {
 
-                String name = rs.getString("name");
-                String role = rs.getString("role");
+                    String hashedPassword = rs.getString("password");
 
-                out.println("<h2>Login Successful!</h2>");
-                out.println("<p>Welcome, " + name + "</p>");
-                out.println("<p>Role: " + role + "</p>");
+                    if (PasswordUtil.checkPassword(password, hashedPassword)) {
 
-            } else {
+                        int userId = rs.getInt("id");
+                        String name = rs.getString("name");
+                        String role = rs.getString("role");
 
-                out.println("<h2>Login Failed!</h2>");
-                out.println("<p>Invalid email or password.</p>");
+                        HttpSession session = request.getSession(true);
+
+                        session.setAttribute("userId", userId);
+                        session.setAttribute("name", name);
+                        session.setAttribute("role", role);
+
+                        session.setMaxInactiveInterval(15 * 60);
+
+                        PrintWriter out = response.getWriter();
+
+                        out.println("<h2>Login Successful!</h2>");
+                        out.println("<p>Welcome, " + escapeHtml(name) + "</p>");
+                        out.println("<p>Role: " + escapeHtml(role) + "</p>");
+
+                    } else {
+
+                        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                        response.getWriter().println(
+                            "Invalid email or password."
+                        );
+                    }
+
+                } else {
+
+                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                    response.getWriter().println(
+                        "Invalid email or password."
+                    );
+                }
             }
-
-            rs.close();
-            ps.close();
-            con.close();
 
         } catch (Exception e) {
 
-            out.println("<h2>Database Error</h2>");
-            out.println("<p>" + e.getMessage() + "</p>");
+            getServletContext().log("Login error", e);
 
-            e.printStackTrace();
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            response.getWriter().println(
+                "Something went wrong. Please try again later."
+            );
         }
+    }
+
+    private String escapeHtml(String value) {
+
+        return value.replace("&", "&amp;")
+                    .replace("<", "&lt;")
+                    .replace(">", "&gt;")
+                    .replace("\"", "&quot;")
+                    .replace("'", "&#39;");
     }
 }

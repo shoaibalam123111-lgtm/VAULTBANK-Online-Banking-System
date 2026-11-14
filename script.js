@@ -73,7 +73,7 @@ function login() {
         return;
     }
 
-    fetch("/OnlineBanking/login", {
+     fetch("http://localhost:8080/OnlineBanking/login",{
 
         method: "POST",
 

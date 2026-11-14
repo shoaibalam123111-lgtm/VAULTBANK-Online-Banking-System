@@ -1,12 +1,17 @@
-# Java compiled files
+# Compiled Java files
 *.class
 
-# MySQL password/reset files
-mysql-init.txt
+# Test utilities
+TestPassword.java
+UpdatePasswords.java
 
-# VS Code
+# Secrets
+.env
+.env.*
+
+# VS Code settings
 .vscode/
 
-# Operating system files
+# OS files
 .DS_Store
 Thumbs.db

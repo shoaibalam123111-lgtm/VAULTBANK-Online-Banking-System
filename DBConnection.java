@@ -1,31 +1,37 @@
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.Properties;
 
-import com.mysql.cj.jdbc.Driver;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 
 public class DBConnection {
 
     private static final String URL =
-            "jdbc:mysql://localhost:3306/vaultbank";
+        "jdbc:mysql://localhost:3306/vaultbank?serverTimezone=UTC";
 
-    private static final String USER = "root";
+    private static final String USER =
+        System.getenv().getOrDefault("DB_USER", "root");
 
-    private static final String PASSWORD = "YOUR_MYSQL_PASSWORD";
+    private static final String PASSWORD =
+        System.getenv("DB_PASSWORD");
 
     public static Connection getConnection() throws SQLException {
 
+        if (PASSWORD == null || PASSWORD.isBlank()) {
+            throw new SQLException(
+                "Database password is not configured."
+            );
+        }
+
         try {
-            Driver driver = new Driver();
+            return DriverManager.getConnection(
+                URL, USER, PASSWORD
+            );
 
-            Properties properties = new Properties();
-            properties.setProperty("user", USER);
-            properties.setProperty("password", PASSWORD);
-
-            return driver.connect(URL, properties);
-
-        } catch (Exception e) {
-            throw new SQLException("MySQL Connection Error: " + e.getMessage(), e);
+        } catch (SQLException e) {
+            System.err.println("MySQL connection failed: " + e.getMessage());
+            throw new SQLException(
+                "Unable to connect to the database."
+            );
         }
     }
 }
